@@ -10,8 +10,6 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-import java.util.concurrent.ExecutionException;
-
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -21,12 +19,8 @@ public class KafkaService {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String message, Integer partition) {
-        try {
-            kafkaTemplate.send(topic1.name(), partition, message, message).get();
-            log.info("Send message to kafka");
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        kafkaTemplate.send(topic1.name(), partition, message, message);
+        log.info("Send message to kafka");
     }
 
     @KafkaListener(
